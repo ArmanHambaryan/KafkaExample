@@ -38,3 +38,15 @@ services:
       context: ./waiter-service
     ports: ["8083:8083"]
     depends_on: [mysql, kafka]
+
+  api-gateway:
+    build:
+      context: ./Api-Gateway
+    ports: [ "8080:8080" ]
+    depends_on:
+      - order-service
+      - kitchen-service
+      - waiter-service
+    environment:
+
+      SPRING_PROFILES_ACTIVE: default
