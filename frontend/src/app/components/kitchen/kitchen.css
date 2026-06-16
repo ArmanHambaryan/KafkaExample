@@ -1,0 +1,112 @@
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.btn-action:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: scale(1.1);
+}
+
+.btn-action.prepare:hover { background-color: #fef3c7; }
+.btn-action.ready:hover { background-color: #d1fae5; }
+.btn-action.delete:hover { background-color: #fee2e2; }
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.received { background: #e0e7ff; color: #3730a3; }
+.status-badge.preparing { background: #fef3c7; color: #92400e; }
+.status-badge.ready { background: #d1fae5; color: #065f46; }
+
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+td {
+  padding: 16px 12px;
+  font-size: 0.875rem;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px !important;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.btn-page,
+.btn-page-num {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+
+.btn-page:hover:not(:disabled),
+.btn-page-num:hover:not(.active) {
+  background: #f3f4f6;
+}
+
+.btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-page-num.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}

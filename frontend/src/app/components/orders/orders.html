@@ -1,0 +1,86 @@
+<div class="orders-container">
+  <header class="section-header">
+    <h2 class="section-title">Order Management</h2>
+  </header>
+
+  <div class="orders-grid">
+    <div class="card form-card">
+      <h3>Create New Order</h3>
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="order-form">
+        <div class="form-group">
+          <label for="tableNumber">Table Number</label>
+          <input id="tableNumber" type="number" formControlName="tableNumber" placeholder="e.g. 5">
+        </div>
+        <div class="form-group">
+          <label for="items">Items</label>
+          <textarea id="items" formControlName="items" placeholder="e.g. 2x Pizza, 1x Coke" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="file">Select Dish Image</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*">
+        </div>
+        <button type="submit" [disabled]="orderForm.invalid" class="btn-primary">Place Order</button>
+      </form>
+      <div *ngIf="statusMessage" [class.error]="isError" [class.success]="!isError" class="status-msg">
+        {{ statusMessage }}
+      </div>
+    </div>
+
+    <div class="card list-card">
+      <h3>All Orders</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Table</th>
+              <th>Items</th>
+              <th>Status</th>
+              <th>Received At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>#{{ order.id }}</td>
+              <td>
+                <img [src]="order.imageUrl" alt="Dish image" class="table-img">
+              </td>
+              <td>{{ order.tableNumber }}</td>
+              <td>{{ order.items }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>{{ order.receivedAt | date:'shortTime' }}</td>
+              <td>
+                <button (click)="deleteOrder(order.id)" class="btn-action-delete" title="Delete Order">🗑️</button>
+              </td>
+            </tr>
+            <tr *ngIf="orders.length === 0">
+              <td colspan="7" class="empty-state">No orders found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)" class="btn-page">Prev</button>
+
+        <div class="page-numbers">
+          <button *ngFor="let page of getPageNumbers()"
+                  (click)="goToPage(page)"
+                  [class.active]="page === currentPage"
+                  class="btn-page-num">
+            {{ page + 1 }}
+          </button>
+        </div>
+
+        <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)" class="btn-page">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -35,8 +35,10 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("PENDING");
         order.setReceivedAt(LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
-        kafkaTemplate.send("order-topic", orderDto);
-        return orderMapper.toDto(savedOrder);
+        OrderDto savedDto = orderMapper.toDto(savedOrder);
+        kafkaTemplate.send("order-topic", savedDto);
+
+        return savedDto;
     }
 
     @Override
@@ -50,5 +52,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
         return orderMapper.toDto(order);
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        if (!orderRepository.existsById(id)) {
+            throw new RuntimeException("Order not found with id: " + id);
+        }
+        orderRepository.deleteById(id);
     }
 }

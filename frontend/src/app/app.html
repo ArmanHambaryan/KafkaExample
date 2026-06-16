@@ -1,4 +1,32 @@
-<div style="text-align: center; padding: 20px;">
-  <h1>{{ title }}</h1>
-  <button (click)="showMessage()">Սեղմիր հևա</button>
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="icon">🍽️</span>
+      <h1>{{ title }}</h1>
+    </div>
+    <nav>
+      <a routerLink="/orders" routerLinkActive="active" class="nav-item">
+        <span class="icon">📝</span> Orders
+      </a>
+      <a routerLink="/kitchen" routerLinkActive="active" class="nav-item">
+        <span class="icon">🍳</span> Kitchen
+      </a>
+      <a routerLink="/waiter" routerLinkActive="active" class="nav-item">
+        <span class="icon">🕴️</span> Waiter
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      v1.0.0
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="top-bar">
+      <div class="user-profile">
+      </div>
+    </header>
+    <div class="page-container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 </div>

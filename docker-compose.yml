@@ -23,7 +23,7 @@ services:
 
   order-service:
     build:
-      context: ./order-service
+      context: order-service
     ports: ["8081:8081"]
     depends_on: [mysql, kafka]
 
@@ -40,13 +40,10 @@ services:
     depends_on: [mysql, kafka]
 
   api-gateway:
-    build:
-      context: ./Api-Gateway
+    build: ./Api-Gateway
+    container_name: api-gateway
     ports: [ "8080:8080" ]
     depends_on:
       - order-service
       - kitchen-service
       - waiter-service
-    environment:
-
-      SPRING_PROFILES_ACTIVE: default

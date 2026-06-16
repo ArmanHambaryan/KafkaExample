@@ -1,10 +1,7 @@
 package com.restaurant.kitchenservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "kitchen_orders")
@@ -15,7 +12,7 @@ public class KitchenOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "order_id", nullable = false, unique = true)
     private Long orderId;
 
     @Column(name = "dish_name", nullable = false)
@@ -23,6 +20,17 @@ public class KitchenOrder {
 
     @Column(name = "kitchen_status", nullable = false)
     private String kitchenStatus;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public Long getId() {
         return id;
@@ -54,5 +62,8 @@ public class KitchenOrder {
 
     public void setKitchenStatus(String kitchenStatus) {
         this.kitchenStatus = kitchenStatus;
+    }
+
+    public KitchenOrder() {
     }
 }

@@ -21,4 +21,10 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="20260616-add-unique-constraint" author="arman">
+        <addUniqueConstraint
+                columnNames="order_id"
+                constraintName="uk_kitchen_order_id"
+                tableName="kitchen_orders"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,47 @@
+<div class="waiter-container">
+  <header class="section-header">
+    <h2 class="section-title">Waiter Service</h2>
+  </header>
+
+  <div class="ready-grid">
+    <div *ngFor="let order of readyOrders" class="card ready-card">
+      <div class="card-header">
+        <span class="order-id">Order #{{ order.orderId }}</span>
+        <span class="status-ready">READY</span>
+      </div>
+
+      <div class="card-image" style="text-align: center; margin: 10px 0;">
+        <img [src]="order.imageUrl" alt="{{ order.dishName }}" style="width: 100%; max-width: 150px; height: auto; border-radius: 8px;">
+      </div>
+
+      <div class="card-body">
+        <h4 class="dish-name">{{ order.dishName }}</h4>
+        <p class="meta">Pick up from kitchen counter</p>
+      </div>
+      <div class="card-footer">
+        <button (click)="markAsDelivered(order.id!)" class="btn-primary full-width">Mark as Delivered</button>
+      </div>
+    </div>
+
+    <div *ngIf="readyOrders.length === 0" class="card empty-card">
+      <div class="empty-icon">☕</div>
+      <h3>Nothing to deliver right now</h3>
+      <p>Take a break or check back later.</p>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)" class="btn-page">Prev</button>
+
+    <div class="page-numbers">
+      <button *ngFor="let page of getPageNumbers()"
+              (click)="goToPage(page)"
+              [class.active]="page === currentPage"
+              class="btn-page-num">
+        {{ page + 1 }}
+      </button>
+    </div>
+
+    <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)" class="btn-page">Next</button>
+  </div>
+</div>

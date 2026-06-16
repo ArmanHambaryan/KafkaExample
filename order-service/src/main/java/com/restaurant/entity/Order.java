@@ -31,6 +31,17 @@ public class Order {
     @CreatedDate
     private LocalDateTime receivedAt;
 
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return Id;
     }
@@ -72,13 +83,5 @@ public class Order {
     }
 
     public Order() {
-    }
-
-    public Order(Long id, Integer tableNumber, String items, String status, LocalDateTime receivedAt) {
-        Id = id;
-        this.tableNumber = tableNumber;
-        this.items = items;
-        this.status = status;
-        this.receivedAt = receivedAt;
     }
 }

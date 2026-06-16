@@ -8,7 +8,9 @@ public record OrderDto(
         Integer tableNumber,
         String items,
         String status,
-        LocalDateTime receivedAt
+        LocalDateTime receivedAt,
+        String imageUrl
+
 ) {
 }
 

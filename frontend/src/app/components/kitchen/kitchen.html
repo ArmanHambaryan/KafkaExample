@@ -1,0 +1,54 @@
+<div class="kitchen-container">
+  <header class="section-header">
+    <h2 class="section-title">Kitchen Operations</h2>
+  </header>
+
+  <div class="card list-card">
+    <h3>Active Tasks</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+        <tr>
+          <th>Image</th> <th>Task ID</th>
+          <th>Order ID</th>
+          <th>Dish Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (kOrder of kitchenOrders; track kOrder.id) {
+            <tr>
+              <td>
+                <img [src]="kOrder.imageUrl" alt="Dish" style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;">
+              </td>
+              <td>#{{ kOrder.id }}</td>
+              <td>#{{ kOrder.orderId }}</td>
+              <td>{{ kOrder.dishName }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(kOrder.kitchenStatus)">
+                  {{ kOrder.kitchenStatus }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button (click)="updateStatus(kOrder.id!, 'PREPARING')" class="btn-action prepare" title="Set to Preparing">🍳</button>
+                  <button (click)="updateStatus(kOrder.id!, 'READY')" class="btn-action ready" title="Set to Ready">✅</button>
+                  <button (click)="deleteOrder(kOrder.id!)" class="btn-action delete" title="Delete Task">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">No active kitchen tasks.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="pagination" *ngIf="totalPages > 1">
+        ...
+      </div>
+    </div>
+  </div>
+</div>

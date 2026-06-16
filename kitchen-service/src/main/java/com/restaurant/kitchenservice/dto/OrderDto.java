@@ -1,5 +1,8 @@
 package com.restaurant.kitchenservice.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+
 import java.time.LocalDateTime;
 
 public record OrderDto(
@@ -7,7 +10,9 @@ public record OrderDto(
         Integer tableNumber,
         String items,
         String status,
-        LocalDateTime receivedAt
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        LocalDateTime receivedAt,
+        String imageUrl
 ) {
 }
 

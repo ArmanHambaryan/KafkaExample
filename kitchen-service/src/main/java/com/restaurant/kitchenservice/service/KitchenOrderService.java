@@ -13,4 +13,6 @@ public interface KitchenOrderService {
     KitchenOrderDto updateKitchenStatus(Long id, String status);
 
     void deleteKitchenOrder(Long id);
+
+    Page<KitchenOrderDto> getAllKitchenOrders(Pageable pageable, String status);
 }
