@@ -27,14 +27,13 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderService: OrderService,
-    private kitchenService: KitchenService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
   ) {
     this.orderForm = this.fb.group({
       tableNumber: ['', Validators.required],
       items: ['', Validators.required],
-      imageUrl: ['assets/pizza.jpg'],
+      imageUrl: ['https://placehold.co/100x100?text=No+Image'],
     });
   }
 
@@ -63,12 +62,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
           this.currentPage = data.number || 0;
         }
 
-        // Enrich orders with cached images if missing from backend
         this.orders = content.map((order: any) => {
           const cachedImage = localStorage.getItem(`order_image_${order.id}`);
-          return { 
-            ...order, 
-            imageUrl: order.imageUrl || order.image || cachedImage || 'assets/pizza.jpg'
+          return {
+            ...order,
+            imageUrl:
+              order.imageUrl ||
+              order.image ||
+              cachedImage ||
+              'https://placehold.co/100x100?text=No+Image',
           };
         });
 
@@ -111,19 +113,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.orderForm.valid) {
       const orderData = this.orderForm.value;
-      // Send both image and imageUrl just in case the backend likes one of them
       const requestData = { ...orderData, image: orderData.imageUrl };
 
       this.orderService.createOrder(requestData).subscribe({
         next: (createdOrder: any) => {
           this.statusMessage = 'Order placed successfully!';
           this.isError = false;
-
-          // Cache the image locally since the backend might not return it
-          if (createdOrder.id && orderData.imageUrl) {
-            localStorage.setItem(`order_image_${createdOrder.id}`, orderData.imageUrl);
-          }
-
           this.orderForm.reset();
           this.fetchOrders(this.currentPage);
         },
