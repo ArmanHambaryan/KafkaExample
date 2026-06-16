@@ -31,7 +31,7 @@ public class Order {
     @CreatedDate
     private LocalDateTime receivedAt;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "image_url",columnDefinition = "TEXT")
     private String imageUrl;
 
     public String getImageUrl() {

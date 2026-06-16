@@ -29,16 +29,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
         Order order = orderMapper.toEntity(orderDto);
-        if (order.getItems() == null) {
-            throw new RuntimeException("Items field is missing or null!");
+        if (orderDto.imageUrl() != null) {
+            order.setImageUrl(orderDto.imageUrl());
         }
         order.setStatus("PENDING");
         order.setReceivedAt(LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
-        OrderDto savedDto = orderMapper.toDto(savedOrder);
-        kafkaTemplate.send("order-topic", savedDto);
-
-        return savedDto;
+        return orderMapper.toDto(savedOrder);
     }
 
     @Override

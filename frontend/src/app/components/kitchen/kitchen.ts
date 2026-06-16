@@ -41,13 +41,12 @@ export class KitchenComponent implements OnInit {
           this.currentPage = data.number || 0;
         }
 
-        // Enrich kitchen orders with cached images from localStorage
         this.kitchenOrders = content.map((kOrder: any) => {
           const orderId = kOrder.orderId;
           const cachedImage = localStorage.getItem(`order_image_${orderId}`);
-          
-          return { 
-            ...kOrder, 
+
+          return {
+            ...kOrder,
             imageUrl: kOrder.imageUrl || kOrder.image || cachedImage || 'assets/pizza.jpg'
           };
         });

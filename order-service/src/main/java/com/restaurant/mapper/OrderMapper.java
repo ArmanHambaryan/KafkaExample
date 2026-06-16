@@ -7,9 +7,12 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
+
+    @Mapping(source = "imageUrl", target = "imageUrl")
     OrderDto toDto(Order order);
 
     @Mapping(source = "items", target = "items")
+    @Mapping(source = "imageUrl", target = "imageUrl")
     Order toEntity(OrderDto orderDto);
 
 }

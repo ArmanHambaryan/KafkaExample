@@ -41,8 +41,9 @@
     <changeSet id="remove-dish-name-column" author="your-name">
         <dropColumn tableName="orders" columnName="dish_name"/>
     </changeSet>
-    <changeSet id="add-image-url-2026-06-16" author="arman">
-        <addColumn tableName="orders"> <column name="image_url" type="varchar(255)"/>
+    <changeSet id="add-image-url-column" author="arman">
+        <addColumn tableName="orders">
+            <column name="image_url" type="TEXT"/>
         </addColumn>
     </changeSet>
 

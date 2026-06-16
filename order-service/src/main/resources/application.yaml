@@ -6,14 +6,14 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:mysql://mysql:3306/order_db?createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/order_db?createDatabaseIfNotExist=true&useSSL=false
     username: root
     password: rootroot
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
 
   liquibase:

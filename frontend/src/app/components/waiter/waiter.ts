@@ -38,13 +38,12 @@ export class WaiterComponent implements OnInit {
         this.totalPages = data.totalPages || 0;
         this.currentPage = data.number || 0;
 
-        // Enrich waiter orders with cached images from localStorage
         this.readyOrders = content.map((order: any) => {
           const orderId = order.orderId;
           const cachedImage = localStorage.getItem(`order_image_${orderId}`);
-          
-          return { 
-            ...order, 
+
+          return {
+            ...order,
             imageUrl: order.imageUrl || order.image || cachedImage || 'assets/pizza.jpg'
           };
         });
