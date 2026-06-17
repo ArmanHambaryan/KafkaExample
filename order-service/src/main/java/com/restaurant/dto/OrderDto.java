@@ -1,16 +1,14 @@
 package com.restaurant.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public record OrderDto(
-        Long id,
-        Integer tableNumber,
-        String items,
-        String status,
-        LocalDateTime receivedAt,
-        String imageUrl
-
+        @JsonProperty("id") Long id,
+        @JsonProperty("tableNumber") Integer tableNumber,
+        @JsonProperty("items") String items,
+        @JsonProperty("status") String status,
+        @JsonProperty("receivedAt") LocalDateTime receivedAt,
+        @JsonProperty("imageUrl") String imageUrl
 ) {
 }
-

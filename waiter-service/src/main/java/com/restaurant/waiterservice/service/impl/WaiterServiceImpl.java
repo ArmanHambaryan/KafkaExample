@@ -34,11 +34,11 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public Page<KitchenOrderDto> getKitchenOrders(Pageable pageable) {
-        String url = "http://kitchen-service:8082/api/kitchen/orders?page="
+        String kitchenUrl = "http://kitchen-service:8082/api/kitchen/orders?page="
                 + pageable.getPageNumber() + "&size=" + pageable.getPageSize() + "&status=READY";
 
         ResponseEntity<KitchenOrderPageResponse> response = restTemplate.exchange(
-                url,
+                kitchenUrl,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {}
@@ -48,9 +48,37 @@ public class WaiterServiceImpl implements WaiterService {
         List<KitchenOrderDto> orders = body != null && body.content() != null
                 ? body.content()
                 : List.of();
-        long totalElements = body != null ? body.totalElements() : 0;
 
-        return new PageImpl<>(orders, pageable, totalElements);
+        List<KitchenOrderDto> ordersWithImages = orders.stream().map(order -> {
+            if (order.imageUrl() != null && !order.imageUrl().isBlank()) {
+                return order;
+            }
+            try {
+                String orderUrl = "http://order-service:8081/api/orders/" + order.orderId();
+                ResponseEntity<OrderDto> orderResponse = restTemplate.exchange(
+                        orderUrl,
+                        HttpMethod.GET,
+                        null,
+                        OrderDto.class
+                );
+                String imageUrl = orderResponse.getBody() != null
+                        ? orderResponse.getBody().imageUrl()
+                        : null;
+                return new KitchenOrderDto(
+                        order.id(),
+                        order.orderId(),
+                        order.dishName(),
+                        order.kitchenStatus(),
+                        imageUrl
+                );
+            } catch (Exception e) {
+                System.err.println("Could not fetch image for orderId: " + order.orderId() + " — " + e.getMessage());
+                return order;
+            }
+        }).toList();
+
+        long totalElements = body != null ? body.totalElements() : 0;
+        return new PageImpl<>(ordersWithImages, pageable, totalElements);
     }
 
     private record KitchenOrderPageResponse(
@@ -59,5 +87,13 @@ public class WaiterServiceImpl implements WaiterService {
             int totalPages,
             int number,
             int size
+    ) {}
+
+    private record OrderDto(
+            Long id,
+            Integer tableNumber,
+            String items,
+            String status,
+            String imageUrl
     ) {}
 }

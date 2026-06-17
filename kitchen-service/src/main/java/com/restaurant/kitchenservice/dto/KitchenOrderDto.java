@@ -1,10 +1,11 @@
 package com.restaurant.kitchenservice.dto;
 
-public record KitchenOrderDto(
-        Long id,
-        Long orderId,
-        String dishName,
-        String kitchenStatus,
-        String imageUrl
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public record KitchenOrderDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("orderId") Long orderId,
+        @JsonProperty("dishName") String dishName,
+        @JsonProperty("kitchenStatus") String kitchenStatus,
+        @JsonProperty("imageUrl") String imageUrl
 ) {}

@@ -43,7 +43,7 @@
     </changeSet>
     <changeSet id="add-image-url-column" author="arman">
         <addColumn tableName="orders">
-            <column name="image_url" type="TEXT"/>
+            <column name="image_url" type="LONGTEXT"/>
         </addColumn>
     </changeSet>
 

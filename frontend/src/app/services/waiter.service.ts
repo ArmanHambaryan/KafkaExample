@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Page } from './order.service';
 import { KitchenOrderDto } from './kitchen.service';
+export type { KitchenOrderDto };
 
 @Injectable({
   providedIn: 'root',

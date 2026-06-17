@@ -47,7 +47,18 @@
       </table>
 
       <div class="pagination" *ngIf="totalPages > 1">
-        ...
+        <button [disabled]="currentPage === 0" (click)="goToPage(currentPage - 1)" class="btn-page">Prev</button>
+
+        <div class="page-numbers">
+          <button *ngFor="let page of getPageNumbers()"
+                  (click)="goToPage(page)"
+                  [class.active]="page === currentPage"
+                  class="btn-page-num">
+            {{ page + 1 }}
+          </button>
+        </div>
+
+        <button [disabled]="currentPage === totalPages - 1" (click)="goToPage(currentPage + 1)" class="btn-page">Next</button>
       </div>
     </div>
   </div>

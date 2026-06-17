@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -16,7 +17,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(name = "table_number", nullable = false)
     private Integer tableNumber;
@@ -31,7 +32,8 @@ public class Order {
     @CreatedDate
     private LocalDateTime receivedAt;
 
-    @Column(name = "image_url",columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "image_url", columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     public String getImageUrl() {
@@ -43,11 +45,11 @@ public class Order {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Integer getTableNumber() {

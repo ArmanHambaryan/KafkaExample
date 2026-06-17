@@ -16,6 +16,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   orderForm: FormGroup;
   statusMessage: string = '';
   isError: boolean = false;
+  selectedFile: File | null = null;
 
   currentPage: number = 0;
   totalPages: number = 0;
@@ -32,7 +33,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.orderForm = this.fb.group({
       tableNumber: ['', Validators.required],
       items: ['', Validators.required],
-      imageUrl: ['https://placehold.co/100x100?text=No+Image'],
     });
   }
 
@@ -61,17 +61,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
           this.currentPage = data.number || 0;
         }
 
-        this.orders = content.map((order: any) => {
-          const cachedImage = localStorage.getItem(`order_image_${order.id}`);
-          return {
-            ...order,
-            imageUrl:
-              order.imageUrl ||
-              order.image ||
-              cachedImage ||
-              'https://placehold.co/100x100?text=No+Image',
-          };
-        });
+        this.orders = content.map((order: any) => ({
+          ...order,
+          imageUrl: order.imageUrl || 'https://placehold.co/100x100?text=No+Image',
+        }));
 
         this.cdr.detectChanges();
       },
@@ -95,7 +88,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
       this.orderService.deleteOrder(id).subscribe({
         next: () => {
           this.orders = this.orders.filter((o) => o.id !== id);
-          localStorage.removeItem(`order_image_${id}`);
           this.statusMessage = 'Order deleted successfully!';
           this.isError = false;
           setTimeout(() => (this.statusMessage = ''), 3000);
@@ -112,13 +104,13 @@ export class OrdersComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.orderForm.valid) {
       const orderData = this.orderForm.value;
-      const requestData = { ...orderData, image: orderData.imageUrl };
 
-      this.orderService.createOrder(requestData).subscribe({
-        next: (createdOrder: any) => {
+      this.orderService.createOrder(orderData, this.selectedFile).subscribe({
+        next: () => {
           this.statusMessage = 'Order placed successfully!';
           this.isError = false;
           this.orderForm.reset();
+          this.selectedFile = null;
           this.fetchOrders(this.currentPage);
         },
         error: (err) => {
@@ -142,16 +134,11 @@ export class OrdersComponent implements OnInit, OnDestroy {
       this.updateSubscription.unsubscribe();
     }
   }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.orderForm.patchValue({
-          imageUrl: e.target.result,
-        });
-      };
-      reader.readAsDataURL(file);
+      this.selectedFile = file;
     }
   }
 }

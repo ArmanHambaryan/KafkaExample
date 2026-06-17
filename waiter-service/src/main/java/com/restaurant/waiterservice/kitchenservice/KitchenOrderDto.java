@@ -4,5 +4,6 @@ public record KitchenOrderDto(
         Long id,
         Long orderId,
         String dishName,
-        String kitchenStatus
+        String kitchenStatus,
+        String imageUrl
 ) {}

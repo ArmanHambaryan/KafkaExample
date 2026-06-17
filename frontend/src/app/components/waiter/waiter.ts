@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WaiterService } from '../../services/waiter.service';
-import { KitchenOrderDto } from '../../services/kitchen.service';
+import { WaiterService, KitchenOrderDto } from '../../services/waiter.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-waiter',
@@ -10,14 +10,15 @@ import { KitchenOrderDto } from '../../services/kitchen.service';
   templateUrl: './waiter.html',
   styleUrl: './waiter.css',
 })
-export class WaiterComponent implements OnInit {
+export class WaiterComponent implements OnInit, OnDestroy {
   readyOrders: KitchenOrderDto[] = [];
-  isLoading: boolean = false;
 
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
   pageSize: number = 10;
+
+  private updateSubscription!: Subscription;
 
   constructor(
     private waiterService: WaiterService,
@@ -26,34 +27,39 @@ export class WaiterComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReadyOrders(this.currentPage);
+    this.updateSubscription = interval(3000).subscribe(() =>
+      this.loadReadyOrders(this.currentPage),
+    );
+  }
+
+  getImageUrl(imageUrl: string | null | undefined): string {
+    if (!imageUrl) return '';
+    return imageUrl;
   }
 
   loadReadyOrders(page: number = 0): void {
-    this.isLoading = true;
     this.waiterService.getOrders(page, this.pageSize).subscribe({
       next: (data: any) => {
-        this.isLoading = false;
-        let content = data && data.content ? data.content : Array.isArray(data) ? data : [];
-        this.totalElements = data.totalElements || 0;
-        this.totalPages = data.totalPages || 0;
-        this.currentPage = data.number || 0;
+        let content = [];
+        if (Array.isArray(data)) {
+          content = data;
+          this.totalElements = data.length;
+          this.totalPages = 1;
+        } else {
+          content = data.content || [];
+          this.totalElements = data.totalElements || 0;
+          this.totalPages = data.totalPages || 0;
+          this.currentPage = data.number || 0;
+        }
 
-        this.readyOrders = content.map((order: any) => {
-          const orderId = order.orderId;
-          const cachedImage = localStorage.getItem(`order_image_${orderId}`);
-
-          return {
-            ...order,
-            imageUrl: order.imageUrl || order.image || cachedImage || 'assets/pizza.jpg'
-          };
-        });
+        this.readyOrders = content.map((order: any) => ({
+          ...order,
+          imageUrl: this.getImageUrl(order.imageUrl || order.image),
+        }));
 
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Error loading ready orders:', err);
-      },
+      error: (err: any) => console.error('Error loading ready orders', err),
     });
   }
 
@@ -70,11 +76,14 @@ export class WaiterComponent implements OnInit {
 
   markAsDelivered(id: number): void {
     this.waiterService.markAsDelivered(id, 'DELIVERED').subscribe({
-      next: () => {
-        this.readyOrders = this.readyOrders.filter((o) => o.id !== id);
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error('Error marking as delivered:', err),
+      next: () => this.loadReadyOrders(this.currentPage),
+      error: (err: any) => console.error('Error marking as delivered', err),
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
   }
 }

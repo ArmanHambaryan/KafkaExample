@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -25,10 +27,12 @@ public class OrderEndpoint {
         this.orderService = orderService;
     }
 
-    @PostMapping
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDto) {
-        OrderDto createdOrder = orderService.createOrder(orderDto);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<OrderDto> createOrder(
+            @RequestPart("order") OrderDto orderDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        OrderDto created = orderService.createOrder(orderDto, image);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping

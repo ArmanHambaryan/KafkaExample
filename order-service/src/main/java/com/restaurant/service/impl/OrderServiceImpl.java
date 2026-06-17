@@ -4,38 +4,53 @@ import com.restaurant.dto.OrderDto;
 import com.restaurant.entity.Order;
 import com.restaurant.mapper.OrderMapper;
 import com.restaurant.repository.OrderRepository;
+import com.restaurant.service.FileStorageService;
 import com.restaurant.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private static final String ORDER_TOPIC = "order-topic";
 
-    private final KafkaTemplate<String, OrderDto> kafkaTemplate;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final FileStorageService fileStorageService;
+    private final KafkaTemplate<String, OrderDto> kafkaTemplate;
 
-    public OrderServiceImpl(KafkaTemplate<String, OrderDto> kafkaTemplate, OrderRepository orderRepository, OrderMapper orderMapper) {
-        this.kafkaTemplate = kafkaTemplate;
+    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper,
+                            FileStorageService fileStorageService, KafkaTemplate<String, OrderDto> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
+        this.fileStorageService = fileStorageService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
-    public OrderDto createOrder(OrderDto orderDto) {
+    public OrderDto createOrder(OrderDto orderDto, MultipartFile image) {
         Order order = orderMapper.toEntity(orderDto);
-        if (orderDto.imageUrl() != null) {
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = fileStorageService.store(image);
+            order.setImageUrl(imageUrl);
+        } else if (orderDto.imageUrl() != null) {
             order.setImageUrl(orderDto.imageUrl());
         }
+
         order.setStatus("PENDING");
         order.setReceivedAt(LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
-        return orderMapper.toDto(savedOrder);
+        OrderDto savedDto = orderMapper.toDto(savedOrder);
+
+        kafkaTemplate.send(ORDER_TOPIC, savedDto);
+
+        return savedDto;
     }
 
     @Override

@@ -1,4 +1,6 @@
 spring:
+  codec:
+    max-in-memory-size: 10MB
   cloud:
     gateway:
       globalcors:
@@ -18,6 +20,10 @@ spring:
           uri: http://order-service:8081
           predicates:
             - Path=/api/orders/**
+        - id: order-service-images
+          uri: http://order-service:8081
+          predicates:
+            - Path=/images/**
         - id: kitchen-service
           uri: http://kitchen-service:8082
           predicates:

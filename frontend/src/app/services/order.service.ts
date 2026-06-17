@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 export interface OrderDto {
   id?: number;
   tableNumber: number;
   items: string;
-  status: string;
+  status?: string;
   receivedAt?: string;
   imageUrl?: string;
-  image?: string;
 }
 
 export interface Page<T> {
@@ -40,9 +39,13 @@ export class OrderService {
     return throwError(() => new Error(error.message || 'Server error'));
   }
 
-  createOrder(order: OrderDto): Observable<OrderDto> {
-    console.log('Sending request to:', this.apiUrl, order);
-    return this.http.post<OrderDto>(this.apiUrl, order).pipe(catchError(this.handleError));
+  createOrder(order: OrderDto, image: File | null): Observable<OrderDto> {
+    const formData = new FormData();
+    formData.append('order', new Blob([JSON.stringify(order)], { type: 'application/json' }));
+    if (image) {
+      formData.append('image', image);
+    }
+    return this.http.post<OrderDto>(this.apiUrl, formData).pipe(catchError(this.handleError));
   }
 
   getAllOrders(page: number = 0, size: number = 10): Observable<Page<OrderDto>> {
@@ -60,4 +63,3 @@ export class OrderService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
-

@@ -47,3 +47,5 @@ services:
       - order-service
       - kitchen-service
       - waiter-service
+volumes:
+  mysql_data:

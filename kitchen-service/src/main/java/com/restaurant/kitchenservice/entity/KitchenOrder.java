@@ -21,15 +21,11 @@ public class KitchenOrder {
     @Column(name = "kitchen_status", nullable = false)
     private String kitchenStatus;
 
-    @Column(name = "image_url")
+    @Lob
+    @Column(name = "image_url", columnDefinition = "LONGTEXT")
     private String imageUrl;
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public KitchenOrder() {
     }
 
     public Long getId() {
@@ -64,6 +60,11 @@ public class KitchenOrder {
         this.kitchenStatus = kitchenStatus;
     }
 
-    public KitchenOrder() {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
