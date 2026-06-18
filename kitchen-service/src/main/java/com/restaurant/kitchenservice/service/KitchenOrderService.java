@@ -8,8 +8,6 @@ public interface KitchenOrderService {
 
     KitchenOrderDto createKitchenOrder(KitchenOrderDto kitchenOrderDto);
 
-    Page<KitchenOrderDto> getAllKitchenOrders(Pageable pageable);
-
     KitchenOrderDto updateKitchenStatus(Long id, String status);
 
     void deleteKitchenOrder(Long id);

@@ -1,8 +1,6 @@
 package com.restaurant.waiterservice.service.impl;
 
 import com.restaurant.waiterservice.kitchenservice.KitchenOrderDto;
-import com.restaurant.waiterservice.entity.Waiter;
-import com.restaurant.waiterservice.repository.WaiterRepository;
 import com.restaurant.waiterservice.service.WaiterService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -18,18 +16,10 @@ import java.util.List;
 @Service
 public class WaiterServiceImpl implements WaiterService {
 
-    private final WaiterRepository waiterRepository;
     private final RestTemplate restTemplate;
 
-    public WaiterServiceImpl(WaiterRepository waiterRepository, RestTemplate restTemplate) {
-        this.waiterRepository = waiterRepository;
+    public WaiterServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-    }
-
-    @Override
-    public Waiter getWaiterById(Long id) {
-        return waiterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Waiter not found with id: " + id));
     }
 
     @Override

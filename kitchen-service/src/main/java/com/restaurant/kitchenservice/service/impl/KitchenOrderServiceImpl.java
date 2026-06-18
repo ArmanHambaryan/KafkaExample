@@ -39,12 +39,6 @@
         }
 
         @Override
-        public Page<KitchenOrderDto> getAllKitchenOrders(Pageable pageable) {
-            Page<KitchenOrder> kitchenOrders = kitchenOrderRepository.findAll(pageable);
-            return kitchenOrders.map(mapper::toDto);
-        }
-
-        @Override
         @Transactional
         public KitchenOrderDto updateKitchenStatus(Long id, String status) {
             KitchenOrder order = kitchenOrderRepository.findById(id)

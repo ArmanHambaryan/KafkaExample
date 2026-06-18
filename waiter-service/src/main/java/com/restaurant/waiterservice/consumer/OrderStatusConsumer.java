@@ -3,7 +3,6 @@ package com.restaurant.waiterservice.consumer;
 import com.restaurant.waiterservice.entity.OrderHistory;
 import com.restaurant.waiterservice.kitchenservice.dto.OrderStatusEvent;
 import com.restaurant.waiterservice.repository.OrderHistoryRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 

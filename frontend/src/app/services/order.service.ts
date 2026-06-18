@@ -55,10 +55,6 @@ export class OrderService {
       .pipe(catchError(this.handleError));
   }
 
-  getOrderById(id: number): Observable<OrderDto> {
-    return this.http.get<OrderDto>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
-  }
-
   deleteOrder(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

@@ -30,12 +30,6 @@ export class KitchenService {
     return throwError(() => new Error(error.message || 'Server error'));
   }
 
-  createKitchenOrder(dto: KitchenOrderDto): Observable<KitchenOrderDto> {
-    return this.http.post<KitchenOrderDto>(this.apiUrl, dto).pipe(
-      catchError(this.handleError)
-    );
-  }
-
   getAllKitchenOrders(page: number = 0, size: number = 10): Observable<Page<KitchenOrderDto>> {
     const params = new HttpParams()
       .set('page', page.toString())
