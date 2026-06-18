@@ -47,5 +47,15 @@ services:
       - order-service
       - kitchen-service
       - waiter-service
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api-gateway
+
 volumes:
   mysql_data:
